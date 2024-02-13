@@ -1,0 +1,17 @@
+.configNode {
+  max-height: 40vh;
+  max-width: 100%;
+}
+
+.mainContainer {
+  max-width: 95%;
+  padding-bottom: 2%;
+}
+
+.fullWidth {
+  max-width: 100%;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+}
