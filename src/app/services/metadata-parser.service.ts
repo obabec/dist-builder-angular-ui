@@ -1,27 +1,22 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MetadataObjectModel} from "../metadataModel/MetadataObjectModel";
 import {DebeziumServerFormBase} from "../metadataModel/DebeziumServerFormBase";
 import {MetadataHttpService} from "./metadata-http.service";
+import {Dependency} from "../metadataModel/Dependency";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class MetadataParserService {
-  private formBuilder: FormBuilder;
-  private metadata!: MetadataObjectModel;
-  constructor(formBuilder: FormBuilder) {
-    this.formBuilder = formBuilder;
+
+  parseMetadata(parent: DebeziumServerFormBase<any>, metadata: MetadataObjectModel) {
+    let group = this.parseObject(metadata, parent, false) as FormGroup;
+    return group;
   }
 
-  parseMetadata(parent: DebeziumServerFormBase<any>) {
-    let mtdtServ = new MetadataHttpService();
-    this.metadata = mtdtServ.getMetadata();
-    return this.parseObject(this.metadata, parent, false) as FormGroup;
-  }
-
-  parseObject(object: MetadataObjectModel, parent: DebeziumServerFormBase<any>, option: boolean): FormGroup | FormControl {
+  parseObject(object: MetadataObjectModel, parent: DebeziumServerFormBase<any>, option: boolean): FormGroup | FormControl | FormArray {
     let group: FormGroup = new FormGroup<any>({});
     if (object.type === "interface") {
       console.debug("Parsing interface")
@@ -72,6 +67,17 @@ export class MetadataParserService {
        })
 
        return group;
+
+     } else if (object.type === 'DependencyList') {
+       console.debug("Parsing dependency list")
+       let dependencyList = new DebeziumServerFormBase();
+       dependencyList.type = "DependencyList";
+       dependencyList.label = "dependencyList";
+       dependencyList.dependencyList = [];
+       parent.children.push(dependencyList);
+       dependencyList.prnt = parent;
+
+       return new FormArray<any>([]);
 
      } else {
       console.debug("Parsing standard property like string, int, and others")

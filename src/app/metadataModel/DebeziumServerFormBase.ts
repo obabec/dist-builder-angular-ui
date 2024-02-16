@@ -1,3 +1,5 @@
+import {Dependency} from "./Dependency";
+
 export class DebeziumServerFormBase<T> {
   value: T|undefined;
   key: string;
@@ -10,6 +12,7 @@ export class DebeziumServerFormBase<T> {
   options: DebeziumServerFormBase<any>[];
   children: DebeziumServerFormBase<any>[];
   prnt: DebeziumServerFormBase<any> | null;
+  dependencyList: Dependency[] | null;
   constructor(options: {
     value?: T;
     key?: string;
@@ -22,6 +25,7 @@ export class DebeziumServerFormBase<T> {
     options?: DebeziumServerFormBase<any>[];
     children? : DebeziumServerFormBase<any>[];
     prnt? : DebeziumServerFormBase<any> | null;
+    dependencyList?: Dependency[] | null;
   } = {}) {
     this.value = options.value;
     this.key = options.key || '';
@@ -34,6 +38,7 @@ export class DebeziumServerFormBase<T> {
     this.options = options.options || [];
     this.children = options.children || [];
     this.prnt = options.prnt || null;
+    this.dependencyList = options.dependencyList || null;
   }
 
   public getTreeLevel() {
