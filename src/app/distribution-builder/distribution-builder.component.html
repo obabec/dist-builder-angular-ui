@@ -1,77 +1,133 @@
 <ng-container *ngIf="this.ready">
-  <div xmlns="http://www.w3.org/1999/html" class="container mainContainer">
-    <form [formGroup]="_form" (ngSubmit)="onSubmit()">
-      <button class="btn btn-warning" type="submit">Create distribution</button>
-      <ng-container
-        *ngFor="let child of serverConfig.children"
-        [ngTemplateOutlet]="treeForm"
-        [ngTemplateOutletContext]="{ $implicit: child,  grupa: getFormGroup(child.label, _form)}">
-      </ng-container>
-
-      <!--        <div class="container row ">-->
-      <button type="button" class="btn btn-primary" (click)="addDependency(_form, dependencyList)" id="{{getUniqueId(dependencyList) + '-button'}}">Add dependency</button>
-      <form [formArrayName]="'dependencyList'" *ngIf="dependencyList.type === 'DependencyList'">
-        <ng-container *ngFor="let dependency of dependencyList.dependencyList; let i = index">
-          <div [formGroup]="getDependencyArrayGroup(_form, i)">
-            <div class="form-group row container">
-              <label for="{{dependency.id}} + '-group'" class="col-sm-4 col-form-label">Group ID</label>
-              <div class="col-sm-4">
-                <input ngDefaultControl type="text" formControlName="groupId" id="{{dependency.id}} + '-group'" class="form-control">
-              </div>
-            </div>
-            <div class="form-group row container">
-              <label for="{{dependency.id}} + '-artifact" class="col-sm-4 col-form-label">Artifact ID</label>
-              <div class="col-sm-4">
-                <input ngDefaultControl type="text" formControlName="artifactId" id="{{dependency.id}} + '-artifact'" class="form-control">
-              </div>
-            </div>
-            <div class="form-group row container">
-              <label for="{{dependency.id}} + '-version'" class="col-sm-4 col-form-label">Version</label>
-              <div class="col-sm-4">
-                <input ngDefaultControl type="text" formControlName="version" id="{{dependency.id}} + '-version'" class="form-control">
-              </div>
-            </div>
-            <div class="form-group row container">
-              <label for="{{dependency.id}} + '-comment'" class="col-sm-4 col-form-label">Comment</label>
-              <div class="col-sm-4">
-                <input ngDefaultControl type="text" formControlName="comment" id="{{dependency.id}} + '-comment'" class="form-control">
-              </div>
-            </div>
-            <button type="button" class="btn btn-danger" (click)="removeDependency(_form, i, dependency)" id="{{dependency.id + '-button'}}">Remove</button>
-          </div>
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <ng-container *ngFor="let child of serverConfig.children">
+          <li class="nav-item">
+            <a [routerLink]="['/builder']" [fragment]="child.label" class="nav-link">{{getTitle(child)}}</a>
+          </li>
         </ng-container>
-      </form>
-      <!--        </div>-->
-    </form>
-    <div class="row">
-      <div class="col-md">
-        <label for="truststore" class="col-sm-4 col-form-label">Truststore</label>
-        <div class="col-sm-4">
-          <input ngDefaultControl (change)="onTruststoreChange($event)" type="file" id="truststore" class="form-control" accept=".jks">
+        <li class="nav-item">
+          <a class="nav-link" href="/builder#security">Security</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <button class="btn btn-sm btn-outline-secondary" type="submit" (click)="onSubmit()">Create distribution</button>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <div xmlns="http://www.w3.org/1999/html" class="container mainContainer">
+    <form [formGroup]="_form" (ngSubmit)="onSubmit()" id="mainForm">
+
+      <div class="container mainContainer" id="{{serverConfig.children[0].label}}">
+        <div class="form-group row">
+          <label for="debeziumVersion" class="col-sm-6 col-form-label">Debezium Version</label>
+          <div class="col-sm-5">
+            <input ngDefaultControl type="text" formControlName="version" id="debeziumVersion" class="form-control">
+          </div>
         </div>
       </div>
-      <div class="col-md">
-        <label for="keystore" class="col-sm-4 col-form-label">Keystore</label>
-        <div class="col-sm-4">
+      <div class="container mainContainer" id="{{serverConfig.children[1].label}}">
+          <ng-container
+            [ngTemplateOutlet]="treeForm"
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[1],  grupa: getFormGroup(serverConfig.children[1].label, _form)}">
+          </ng-container>
+      </div>
+      <div class="container mainContainer" id="{{serverConfig.children[2].label}}">
+          <ng-container
+            [ngTemplateOutlet]="treeForm"
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[2],  grupa: getFormGroup(serverConfig.children[2].label, _form)}">
+          </ng-container>
+      </div>
+      <div class="container mainContainer" id="{{serverConfig.children[3].label}}">
+          <ng-container
+            [ngTemplateOutlet]="treeForm"
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[3],  grupa: getFormGroup(serverConfig.children[3].label, _form)}">
+          </ng-container>
+      </div>
+      <div class="container mainContainer">
+          <h3 id="dependencyList">Dependency List</h3>
+          <button type="button" class="btn btn-primary col-md-2" (click)="addDependency(_form, dependencyList)" id="{{getUniqueId(dependencyList) + '-button'}}">Add dependency</button>
+          <form [formArrayName]="'dependencyList'" *ngIf="dependencyList.type === 'DependencyList'">
+            <ng-container
+              [ngTemplateOutlet]="dependencyListTemplate">
+            </ng-container>
+          </form>
+      </div>
+      <div class="container mainContainer row" id="security">
+        <h3>Security</h3>
+        <div class="col-md-6">
+          <label for="truststore" class="col-sm-4 col-form-label">Truststore</label>
+          <input ngDefaultControl (change)="onTruststoreChange($event)" type="file" id="truststore" class="form-control" accept=".jks">
+        </div>
+        <div class="col-md-6">
+          <label for="keystore" class="col-sm-4 col-form-label">Keystore</label>
           <input ngDefaultControl (change)="onKeystoreChange($event)" type="file" id="keystore" class="form-control" accept=".jks">
         </div>
       </div>
-    </div>
+    </form>
+
+    <ng-template #dependencyListTemplate>
+      <ng-container *ngIf="this.dependencyList.dependencyList != null">
+        <div class="dependency-container">
+        <ng-container *ngFor="let dependencyArray of getDependencyMatrix()" class="row">
+        <div class="row">
+        <ng-container *ngFor="let dependency of dependencyArray" [formGroup]="getDependencyArrayGroup(_form, getDependencyIndex(dependency))" class="col-md-4 dep">
+          <div class="col-md-4">
+            <div class="form-group row">
+              <label for="{{dependency.id}} + '-group'" class="col-sm-4 col-form-label">Group ID</label>
+              <div class="col-sm-7">
+                <input ngDefaultControl type="text" formControlName="groupId" id="{{dependency.id}} + '-group'" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="{{dependency.id}} + '-artifact" class="col-sm-4 col-form-label">Artifact ID</label>
+              <div class="col-sm-7">
+                <input ngDefaultControl type="text" formControlName="artifactId" id="{{dependency.id}} + '-artifact'" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="{{dependency.id}} + '-version'" class="col-sm-4 col-form-label">Version</label>
+              <div class="col-sm-7">
+                <input ngDefaultControl type="text" formControlName="version" id="{{dependency.id}} + '-version'" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="{{dependency.id}} + '-comment'" class="col-sm-4 col-form-label">Comment</label>
+              <div class="col-sm-7">
+                <input ngDefaultControl type="text" formControlName="comment" id="{{dependency.id}} + '-comment'" class="form-control">
+              </div>
+            </div>
+            <button type="button" class="btn btn-danger" (click)="removeDependency(_form, getDependencyIndex(dependency), dependency)" id="{{dependency.id + '-button'}}">Remove</button>
+          </div>
+        </ng-container>
+        </div>
+        </ng-container>
+        </div>
+      </ng-container>
+    </ng-template>
 
     <ng-template #treeForm let-data let-group="grupa">
       <!--    Pokud je parent interface, tak zadny h3-->
       <ng-container *ngIf="(data.type === 'class' || data.type === 'interface') && data.prnt.type !== 'interface'">
-        <h3>{{data.label}}</h3>
-        <ng-container *ngIf="data.type !== 'interface'">
-          <button type="button" class="btn btn-primary" (click)="hideUnhide(this.getFormGroup(data.label, group), data); changeButtonText(getUniqueId(data) + '-button')" id="{{getUniqueId(data) + '-button'}}">Enable</button>
+        <h3>{{getTitle(data)}}</h3>
+        <ng-container *ngIf="data.type !== 'interface' && data.getTreeLevel() !== 1">
+          <button type="button" class="btn btn-primary" (click)="hideUnhide(this.getFormGroup(data.label, group), data); changeButtonText(getUniqueId(data) + '-button')" id="{{getUniqueId(data) + '-button'}}">Disable</button>
           {{disableGroupIfNotExplicit(data, group)}}
         </ng-container>
       </ng-container>
 
 
 
-      <div class="container fullWidth">
-        <form [formGroup]="group" id="{{getUniqueId(data)}}" [ngStyle]="{'display': getFormDisplay(data)} ">
+        <form [formGroup]="group" id="{{getUniqueId(data)}}" [ngStyle]="{'display': getFormDisplay(data, group)} ">
 
 
           <!--   Handle properties     -->
@@ -87,10 +143,10 @@
               <!--     Handle enum diff       -->
               <ng-container *ngIf="child.controlType === 'dropdown'">
                 <div class="form-group row container">
-                  <label for="{{child.label}}" class="col-sm-4 col-form-label">{{child.label}}</label>
-                  <div class="col-sm-4">
+                  <label for="{{child.label}}" class="col-sm-6 col-form-label">{{child.label}}</label>
+                  <div class="col-sm-6">
                     <select formControlName="{{child.label}}" id="{{child.label}}" class="form-control form-select">
-                      <ng-container *ngFor="let variant of child.variants">
+                      <ng-container *ngFor="let variant of child.variants; let i = index">
                         <option value="{{variant.value}}">{{variant.value}}</option>
                       </ng-container>
                     </select>
@@ -99,24 +155,24 @@
               </ng-container>
               <ng-container *ngIf="child.controlType === 'number'">
                 <div class="form-group row container">
-                  <label for="{{child.label}}" class="col-sm-4 col-form-label">{{child.label}}</label>
-                  <div class="col-sm-4">
+                  <label for="{{child.label}}" class="col-sm-6 col-form-label">{{child.label}}</label>
+                  <div class="col-sm-6">
                     <input ngDefaultControl type="number" formControlName="{{child.label}}" id="{{child.label}}" class="form-control">
                   </div>
                 </div>
               </ng-container>
               <ng-container *ngIf="child.controlType === 'checkbox'">
                 <div class="form-group row container">
-                  <label for="{{child.label}}" class="col-sm-4 col-form-label">{{child.label}}</label>
-                  <div class="col-sm-4">
+                  <label for="{{child.label}}" class="col-sm-6 col-form-label">{{child.label}}</label>
+                  <div class="col-sm-6">
                     <input ngDefaultControl type="checkbox" formControlName="{{child.label}}" id="{{child.label}}" class="form-check-input">
                   </div>
                 </div>
               </ng-container>
               <ng-container *ngIf="child.controlType === 'text'">
                 <div class="form-group row container">
-                  <label for="{{child.label}}" class="col-sm-4 col-form-label">{{child.label}}</label>
-                  <div class="col-sm-4">
+                  <label for="{{child.label}}" class="col-sm-6 col-form-label">{{child.label}}</label>
+                  <div class="col-sm-6">
                     <input ngDefaultControl type="text" formControlName="{{child.label}}" id="{{child.label}}" class="form-control">
                   </div>
                 </div>
@@ -126,13 +182,12 @@
           </ng-container>
           <ng-container *ngIf="data.type === 'interface'">
             <select (change)="onSelectChange(group, data, $event)">
-              <option value="">Select {{data.label}}</option>
               <ng-container *ngFor="let option of data.options">
-                <option value="{{option.label}}">{{option.label}}</option>
+                <option value="{{option.label}}" [selected]="isSelected(group, option)">{{option.label}}</option>
               </ng-container>
             </select>
 
-            <div class="overflow-y-auto configNode container">
+            <div class="container">
               <!--   Handle interface implementations     -->
               <ng-container *ngFor="let option of data.options">
                 <ng-container [ngTemplateOutlet]="treeForm" [ngTemplateOutletContext]="{ $implicit: option, grupa: this.getFormGroup(option.label, group) }">
@@ -144,7 +199,6 @@
 
         </form>
 
-      </div>
     </ng-template>
 
   </div>

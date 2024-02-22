@@ -27,7 +27,9 @@ export class MetadataParserService {
       obj.prnt = parent;
       for (let j = 0; j < object.options.length; j++) {
         let newGroup = this.parseObject(object.options[j], obj, true)
-        newGroup.disable();
+        if (j != 0) {
+          newGroup.disable();
+        }
         group.addControl(object.options[j].name, newGroup);
       }
       parent.children.push(obj);

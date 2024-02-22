@@ -16,8 +16,6 @@ import {saveAs} from "file-saver";
   templateUrl: './distribution-builder.component.html',
   styleUrls: ['./distribution-builder.component.css'],
   providers: [MetadataParserService],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionBuilderComponent implements OnInit {
@@ -92,7 +90,7 @@ export class DistributionBuilderComponent implements OnInit {
   disableGroupIfNotExplicit(object: DebeziumServerFormBase<any>, group: FormGroup) {
     let grp = document.getElementById(this.getUniqueId(object));
     if (grp != undefined) {
-      if (grp.style.display != 'block') {
+      if (grp.style.display != 'block' && group.disabled) {
         group.disable();
       }
     }
@@ -109,8 +107,30 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
+  getDependencyMatrix() {
+    let dependencyMatrix = [];
+    if (this.dependencyList.dependencyList != undefined) {
+      for (let i = 0; i < this.dependencyList.dependencyList.length; i = i + 3) {
+        let arr = this.dependencyList.dependencyList.slice(i, i + 3)
+        dependencyMatrix.push(arr);
+      }
+    }
+    return dependencyMatrix;
+  }
+
   getDependencyArray(group: FormGroup): FormArray {
     return group.get("dependencyList") as FormArray
+  }
+
+  getDependencyIndex(dependency: Dependency): number {
+    if (this.dependencyList.dependencyList != undefined) {
+      for (let i = 0; i < this.dependencyList.dependencyList.length; i++) {
+        if (this.dependencyList.dependencyList[i].id === dependency.id) {
+          return i;
+        }
+      }
+    }
+    return 0;
   }
 
   getDependencyArrayGroup(group: FormGroup, index: number): FormGroup {
@@ -155,8 +175,8 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
-  getFormDisplay(currentNode: DebeziumServerFormBase<any>): string {
-    if (currentNode.type == 'class') {
+  getFormDisplay(currentNode: DebeziumServerFormBase<any>, group: FormGroup): string {
+    if (currentNode.type == 'class' && group.disabled) {
       return "none";
     } else {
       return "block";
@@ -179,6 +199,24 @@ export class DistributionBuilderComponent implements OnInit {
 
 
     return  id;
+  }
+
+  getTitle(object: DebeziumServerFormBase<any>): string {
+    let titlesec = object.label.split(/(?=[A-Z])/);
+    let title = ""
+    for (let word of titlesec) {
+      if (title.length === 0) {
+        title = word.charAt(0).toUpperCase() + word.slice(1);
+      } else {
+        title = title + " " + word.charAt(0).toUpperCase() + word.slice(1);
+      }
+    }
+    return title;
+  }
+
+  isSelected(parentGroup: FormGroup, option: DebeziumServerFormBase<any>): boolean {
+    let targetGroup = this.getFormGroup(option.label, parentGroup);
+    return targetGroup.enabled;
   }
 
   onSelectChange(formGroup: FormGroup, parent: DebeziumServerFormBase<any>, targetLabel: any): void {
@@ -219,12 +257,18 @@ export class DistributionBuilderComponent implements OnInit {
   onSubmit() {
     let formData = new FormData()
     formData.append('distribution', JSON.stringify(this._form.value));
-    formData.append('truststore', this.trustStore, 'truststore.jks');
-    formData.append('keystore', this.keyStore, 'keystore.jks');
+    if (this.trustStore != undefined) {
+      formData.append('truststore', this.trustStore, 'truststore.jks');
+    }
+    if (this.keyStore != undefined) {
+      formData.append('keystore', this.keyStore, 'keystore.jks');
+    }
     this.httpService.postForm(formData).then(response => {
       saveAs(response as Blob, 'distribution.zip')
     }).catch(err => {
       console.log("Problema " + err.toString())
     })
   }
+
+  protected readonly console = console;
 }

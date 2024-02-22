@@ -303,9 +303,21 @@
 </style>
 
 
-<h1>Debezium Server Distribution Builder</h1>
-<nav>
-  <a routerLink="/builder" routerLinkActive="active" ariaCurrentWhenActive="page">BUILDER</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="assets/logo.png" width="30" height="30" alt="">
+    Debezium Server Distribution Builder
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/intro" routerLinkActive="active"  ariaCurrentWhenActive="page">Intro</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/builder" routerLinkActive="active"  ariaCurrentWhenActive="page">Builder</a>
+      </li>
+    </ul>
+  </div>
+
 </nav>
-<app-distribution-builder></app-distribution-builder>
 <router-outlet></router-outlet>

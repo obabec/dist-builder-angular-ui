@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+router-outlet + * {
+  background-color: steelblue;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/Montserrat.ttf');
+}
+
+h3, label, a {
+  font-family: Montserrat !important;
+}

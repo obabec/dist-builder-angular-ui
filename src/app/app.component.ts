@@ -7,17 +7,12 @@ import {RouterOutlet} from "@angular/router";
 import {MetadataHttpService} from "./services/metadata-http.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MetadataObjectModel} from "./metadataModel/MetadataObjectModel";
+import {AppRoutingModule} from "./app-routing.module";
 
 @Component({
   selector: 'app-root',
   providers: [
     MetadataParserService,
-    HttpClientModule
-  ],
-  standalone: true,
-  imports: [
-    DistributionBuilderComponent,
-    RouterOutlet,
     HttpClientModule
   ],
   templateUrl: `app.component.html`

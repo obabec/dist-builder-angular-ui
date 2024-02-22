@@ -49,6 +49,6 @@ export class DebeziumServerFormBase<T> {
       // @ts-ignore
       c = c.prnt;
     }
-    return level*100;
+    return level;
   }
 }

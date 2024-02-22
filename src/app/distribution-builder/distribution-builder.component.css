@@ -1,17 +1,26 @@
-.configNode {
-  max-height: 40vh;
-  max-width: 100%;
-}
+/*
 
-.mainContainer {
-  max-width: 95%;
-  padding-bottom: 2%;
-}
+!*
 
 .fullWidth {
   max-width: 100%;
+}*!*/
+
+#mainForm {
+  padding: 5%;
 }
 
-body {
-  font-family: Roboto, sans-serif;
+h3, label, a {
+  font-family: Montserrat !important;
+}
+.mainContainer {
+  margin-top: 2%;
+}
+
+.formRow {
+  margin: 2%;
+}
+
+.dependency-container .row {
+  padding: 2%;
 }
