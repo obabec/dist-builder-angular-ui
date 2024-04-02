@@ -179,9 +179,9 @@
 
           </ng-container>
           <ng-container *ngIf="data.type === 'interface'">
-            <select (change)="onSelectChange(group, data, $event)">
+            <select (change)="onSelectChange(group, data, $event)" id="{{data.label}}">
               <ng-container *ngFor="let option of data.options">
-                <option value="{{option.label}}" [selected]="isSelected(group, option)">{{option.label}}</option>
+                <option value="{{option.label}}" id="{{option.label}}" [selected]="isSelected(group, option)">{{option.label}}</option>
               </ng-container>
             </select>
 
