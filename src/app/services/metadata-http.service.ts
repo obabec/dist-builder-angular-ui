@@ -23,10 +23,9 @@ export class MetadataHttpService {
             next: value => {
               resolve(value);
             }, error: err => {
-              console.log("Problema hir")
-              reject("Not great")
+              reject("Could not retrieve metadata from backend!")
             }, complete: () => {
-              console.log("Completo")
+              console.log("Successfully retrieved metadata.")
             }
           }
         )
@@ -35,7 +34,6 @@ export class MetadataHttpService {
 
   async postForm(json: FormData) {
     let headers = new HttpHeaders()
-      //.set('Content-Type', 'multipart/form-data')
       .set('Accept', 'application/octet-stream')
       .set('Access-Control-Allow-Headers', '*')
       .set('Access-Control-Allow-Origin', '*');
@@ -48,7 +46,7 @@ export class MetadataHttpService {
           }, error: err => {
             reject(err)
           }, complete: () => {
-             console.log("Completo")
+            console.log("Successfully sent request for distribution generation.")
           }
         })
     });

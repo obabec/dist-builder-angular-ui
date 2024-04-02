@@ -40,13 +40,12 @@ export class DistributionBuilderComponent implements OnInit {
       this.dependencyList = this.serverConfig.children[4];
       this.ready = true;
       this.cdRef.detectChanges();
-      let haha = 5;
     }).catch(() => {
-      console.log("ERROROROROR")
+      console.log("Error occurred during the initialization of the distribution-builder component!")
     });
 
-    this.dependencyList = this.serverConfig.children[4];
-    console.log("Initialising builder UI")
+    //this.dependencyList = this.serverConfig.children[4];
+    console.log("Initialising builder UI complete.")
   }
 
   getFormGroup(name: string, group: FormGroup): FormGroup {
@@ -241,7 +240,6 @@ export class DistributionBuilderComponent implements OnInit {
   onKeystoreChange(event: any) {
     const files = event.target.files;
     if (files.length) {
-      //this.status = "initial";
       this.keyStore = files[0];
     }
   }
@@ -249,7 +247,6 @@ export class DistributionBuilderComponent implements OnInit {
   onTruststoreChange(event: any) {
     const files = event.target.files;
     if (files.length) {
-      //this.status = "initial";
       this.trustStore = files[0];
     }
   }

@@ -38,19 +38,19 @@
       <div class="container mainContainer" id="{{serverConfig.children[1].label}}">
           <ng-container
             [ngTemplateOutlet]="treeForm"
-            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[1],  grupa: getFormGroup(serverConfig.children[1].label, _form)}">
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[1],  specificGroup: getFormGroup(serverConfig.children[1].label, _form)}">
           </ng-container>
       </div>
       <div class="container mainContainer" id="{{serverConfig.children[2].label}}">
           <ng-container
             [ngTemplateOutlet]="treeForm"
-            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[2],  grupa: getFormGroup(serverConfig.children[2].label, _form)}">
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[2],  specificGroup: getFormGroup(serverConfig.children[2].label, _form)}">
           </ng-container>
       </div>
       <div class="container mainContainer" id="{{serverConfig.children[3].label}}">
           <ng-container
             [ngTemplateOutlet]="treeForm"
-            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[3],  grupa: getFormGroup(serverConfig.children[3].label, _form)}">
+            [ngTemplateOutletContext]="{ $implicit: serverConfig.children[3],  specificGroup: getFormGroup(serverConfig.children[3].label, _form)}">
           </ng-container>
       </div>
       <div class="container mainContainer">
@@ -115,7 +115,7 @@
       </ng-container>
     </ng-template>
 
-    <ng-template #treeForm let-data let-group="grupa">
+    <ng-template #treeForm let-data let-group="specificGroup">
       <!--    Pokud je parent interface, tak zadny h3-->
       <ng-container *ngIf="(data.type === 'class' || data.type === 'interface') && data.prnt.type !== 'interface'">
         <h3>{{getTitle(data)}}</h3>
@@ -128,13 +128,11 @@
 
 
         <form [formGroup]="group" id="{{getUniqueId(data)}}" [ngStyle]="{'display': getFormDisplay(data, group)} ">
-
-
           <!--   Handle properties     -->
           <ng-container *ngFor="let child of data.children">
 
             <ng-container *ngIf="child.type === 'class' || child.type === 'interface'">
-              <ng-container [ngTemplateOutlet]="treeForm" [ngTemplateOutletContext]="{ $implicit: child, grupa: this.getFormGroup(child.label, group) }">
+              <ng-container [ngTemplateOutlet]="treeForm" [ngTemplateOutletContext]="{ $implicit: child, specificGroup: this.getFormGroup(child.label, group) }">
                 <!--     Recursion template         -->
               </ng-container>
             </ng-container>
@@ -190,13 +188,12 @@
             <div class="container">
               <!--   Handle interface implementations     -->
               <ng-container *ngFor="let option of data.options">
-                <ng-container [ngTemplateOutlet]="treeForm" [ngTemplateOutletContext]="{ $implicit: option, grupa: this.getFormGroup(option.label, group) }">
+                <ng-container [ngTemplateOutlet]="treeForm" [ngTemplateOutletContext]="{ $implicit: option, specificGroup: this.getFormGroup(option.label, group) }">
                   <!--     Recursion template         -->
                 </ng-container>
               </ng-container>
             </div>
           </ng-container>
-
         </form>
 
     </ng-template>

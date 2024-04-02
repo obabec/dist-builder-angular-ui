@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {MetadataObjectModel} from "../metadataModel/MetadataObjectModel";
 import {DebeziumServerFormBase} from "../metadataModel/DebeziumServerFormBase";
-import {MetadataHttpService} from "./metadata-http.service";
-import {Dependency} from "../metadataModel/Dependency";
 
 
 @Injectable({
