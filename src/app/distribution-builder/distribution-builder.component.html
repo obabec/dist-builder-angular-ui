@@ -54,9 +54,9 @@
           </ng-container>
       </div>
       <div class="container mainContainer">
-          <h3 id="dependencyList">Dependency List</h3>
+          <h3 id="dependencyListHeading">Dependency List</h3>
           <button type="button" class="btn btn-primary col-md-2" (click)="addDependency(_form, dependencyList)" id="{{getUniqueId(dependencyList) + '-button'}}">Add dependency</button>
-          <form [formArrayName]="'dependencyList'" *ngIf="dependencyList.type === 'DependencyList'">
+          <form [formArrayName]="'dependencyList'" id="dependencyList">
             <ng-container
               [ngTemplateOutlet]="dependencyListTemplate">
             </ng-container>
@@ -81,7 +81,7 @@
         <ng-container *ngFor="let dependencyArray of getDependencyMatrix()" class="row">
         <div class="row">
         <ng-container *ngFor="let dependency of dependencyArray" [formGroup]="getDependencyArrayGroup(_form, getDependencyIndex(dependency))" class="col-md-4 dep">
-          <div class="col-md-4">
+          <div class="col-md-4" id="{{dependency.id}}">
             <div class="form-group row">
               <label for="{{dependency.id}} + '-group'" class="col-sm-4 col-form-label">Group ID</label>
               <div class="col-sm-7">
@@ -91,7 +91,7 @@
             <div class="form-group row">
               <label for="{{dependency.id}} + '-artifact" class="col-sm-4 col-form-label">Artifact ID</label>
               <div class="col-sm-7">
-                <input ngDefaultControl type="text" formControlName="artifactId" id="{{dependency.id}} + '-artifact'" class="form-control">
+                <input ngDefaultControl type="text" formControlName="artifactId" id="{{dependency.id}} + '-artifact'" class="form-control" data-testid="artifactId">
               </div>
             </div>
             <div class="form-group row">

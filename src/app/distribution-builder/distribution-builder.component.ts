@@ -156,8 +156,8 @@ export class DistributionBuilderComponent implements OnInit {
       version: new FormControl(),
       comment: new FormControl()
     })
-    this.getDependencyArray(group).push(grp)
-    let asdasd: 4;
+    this.getDependencyArray(group).push(grp);
+    this.cdRef.detectChanges();
   }
 
   hideUnhide(group: FormGroup, groupItem: DebeziumServerFormBase<any>) {

@@ -26,7 +26,7 @@ test('test-full-configuration', async ({ page }) => {
   
     const downloadPromise = page.waitForEvent('download');
     
-    const emptySum = 'f501f3db291dc6341087f56cebe49192';
+    const emptySum = '4fcc5c524e33aa4d032d3e5d48aa2d3e';
     const md5File = require('md5-file');
     md5File(await (await downloadPromise).path()).then((hash) => {
       expect(hash).toEqual(emptySum);
