@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test-full-configuration', async ({ page }) => {
+test('test-full-spec', async ({ page }) => {
     await page.goto('http://localhost:4200/');
     await page.goto('http://localhost:4200/intro');
     await page.getByRole('link', { name: 'Builder', exact: true }).click();
@@ -50,11 +50,24 @@ test('test-full-configuration', async ({ page }) => {
     await page.locator('#dependencyList').getByTestId('artifactId').nth(2).fill("test-frame");
     await page.locator('#dependencyList').getByLabel('Comment').nth(2).fill("Test frame");
 
+    const fileChooserPromise = page.waitForEvent('filechooser');
+    await page.locator('#truststore').click();
+    const fileChooser = await fileChooserPromise;
+    var path = require('path');
+    await fileChooser.setFiles(path.join(__dirname, 'resources/truststore.jks'));
+
+
+    const keystorePromise = page.waitForEvent('filechooser');
+    await page.locator('#keystore').click();
+    const keystore = await keystorePromise;
+    var path = require('path');
+    await keystore.setFiles(path.join(__dirname, 'resources/keystore.jks'));
+
     await page.getByRole('button', { name: 'Create distribution' }).click();
   
     const download = await page.waitForEvent('download');
     
-    const emptySum = 'f04487e22df98ac0358f169e26ecd0e4';
+    const emptySum = '453d2816751f85db183e45d044412758';
     const md5File = require('md5-file');
     md5File(await download.path()).then((hash) => {
       expect(hash).toEqual(emptySum);

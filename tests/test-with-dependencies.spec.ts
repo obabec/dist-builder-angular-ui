@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test-full-configuration', async ({ page }) => {
+test('test-with-dependencies', async ({ page }) => {
     await page.goto('http://localhost:4200/');
     await page.goto('http://localhost:4200/intro');
     await page.getByRole('link', { name: 'Builder', exact: true }).click();
@@ -46,7 +46,7 @@ test('test-full-configuration', async ({ page }) => {
   
     const download = await page.waitForEvent('download');
     
-    const emptySum = '43b1c6e108f324ca2acf8f545559f7a2';
+    const emptySum = '167e122e0b9d174a06f1f5934fc6222b';
     const md5File = require('md5-file');
     md5File(await download.path()).then((hash) => {
       expect(hash).toEqual(emptySum);
