@@ -53,6 +53,12 @@
             [ngTemplateOutletContext]="{ $implicit: serverConfig.children[3],  specificGroup: getFormGroup(serverConfig.children[3].label, _form)}">
           </ng-container>
       </div>
+      <div class="container mainContainer" id="{{serverConfig.children[4].label}}">
+        <ng-container
+          [ngTemplateOutlet]="treeForm"
+          [ngTemplateOutletContext]="{ $implicit: serverConfig.children[4],  specificGroup: getFormGroup(serverConfig.children[4].label, _form)}">
+        </ng-container>
+      </div>
       <div class="container mainContainer">
           <h3 id="dependencyListHeading">Dependency List</h3>
           <button type="button" class="btn btn-primary col-md-2" (click)="addDependency(_form, dependencyList)" id="{{getUniqueId(dependencyList) + '-button'}}">Add dependency</button>
