@@ -29,6 +29,9 @@
  *
  */
 
+/**
+ * First level parsing object. This object directly maps to metadata from API.
+ */
 export class MetadataObjectModel {
   private _name: string;
   private _type: string;

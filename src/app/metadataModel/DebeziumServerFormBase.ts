@@ -31,6 +31,10 @@
 
 import {Dependency} from "./Dependency";
 
+/**
+ * Mapping class. This class contains couple of attributes that are not currently used
+ * but might be used in the future with implementing FormControls.
+ */
 export class DebeziumServerFormBase<T> {
   value: T|undefined;
   key: string;
@@ -70,16 +74,5 @@ export class DebeziumServerFormBase<T> {
     this.children = options.children || [];
     this.prnt = options.prnt || null;
     this.dependencyList = options.dependencyList || null;
-  }
-
-  public getTreeLevel() {
-    let level = 0;
-    let c = this.prnt;
-    while (c != null) {
-      level++;
-      // @ts-ignore
-      c = c.prnt;
-    }
-    return level;
   }
 }

@@ -40,15 +40,28 @@ import {DebeziumServerFormBase} from "../metadataModel/DebeziumServerFormBase";
 })
 export class MetadataParserService {
 
+  /**
+   * Parses the metadata from API and returns completed FormGroup. It also modifies the parent object.
+   * @param parent Empty object that will be modified during the process.
+   * @param metadata
+   */
   parseMetadata(parent: DebeziumServerFormBase<any>, metadata: MetadataObjectModel) {
     let group = this.parseObject(metadata, parent, false) as FormGroup;
     return group;
   }
 
+  /**
+   * This method is recursively called to parse every object from metadata. For each object it
+   * completes the DebeziumServerFormBase object and also specific FormGroup, FormArray or FormControl. These are than
+   * added to parent DebeziumServerFormBase or Form component.
+   * @param object object to parse
+   * @param parent parent metadata object
+   * @param option true if parsing specific interface implementation
+   */
   parseObject(object: MetadataObjectModel, parent: DebeziumServerFormBase<any>, option: boolean): FormGroup | FormControl | FormArray {
     let group: FormGroup = new FormGroup<any>({});
     if (object.type === "interface") {
-      console.debug("Parsing interface")
+      console.trace("Parsing interface")
       let obj = new DebeziumServerFormBase();
       obj.type = object.type;
       obj.label = object.name;
@@ -64,16 +77,16 @@ export class MetadataParserService {
       parent.children.push(obj);
       return group;
     }
-
+    // Parsing implementation
      if (object.type === "enum") {
-      console.debug("Parsing enumeration");
+      console.trace("Parsing enumeration");
       let obj = this.parseEnum(object, parent);
       let control: FormControl = new FormControl(obj.value || '', );
       parent.children.push(obj);
       return control;
-
+    // Parsing specific class
     } else if (object.type === "class") {
-       console.debug("Debugging class");
+       console.trace("Debugging class");
        let node: DebeziumServerFormBase<any>;
        if (parent.key == "") {
          node = parent;
@@ -90,17 +103,17 @@ export class MetadataParserService {
        node.type = object.type;
        node.label = object.name;
 
-       console.debug("Parsing class fields")
+       console.trace("Parsing class fields")
        object.fields.forEach(field => {
-         console.debug("Now parsing field: " + field.name + " of class: " + object.name);
+         console.trace("Now parsing field: " + field.name + " of class: " + object.name);
          let control = this.parseObject(field, node, false);
          group.addControl(field.name, control);
        })
 
        return group;
-
+      // Parsing the dependency list
      } else if (object.type === 'DependencyList') {
-       console.debug("Parsing dependency list")
+       console.trace("Parsing dependency list")
        let dependencyList = new DebeziumServerFormBase();
        dependencyList.type = "DependencyList";
        dependencyList.label = "dependencyList";
@@ -111,7 +124,7 @@ export class MetadataParserService {
        return new FormArray<any>([]);
 
      } else {
-      console.debug("Parsing standard property like string, int, and others")
+      console.trace("Parsing standard property like string, int, and others")
       let obj = this.parseProperty(object, parent)
       let control: FormControl = new FormControl(obj.value || '');
       parent.children.push(obj);
@@ -119,6 +132,7 @@ export class MetadataParserService {
     }
   }
 
+  // Parsing specific attribute besides the Enum
   parseProperty(prop: MetadataObjectModel, parent: DebeziumServerFormBase<any>) {
     let cntp = "";
     if (prop.type.includes("Integer")) {
@@ -139,6 +153,7 @@ export class MetadataParserService {
     return tgProp
   }
 
+  // Parsing enumerations
   parseEnum(en: MetadataObjectModel, parent: DebeziumServerFormBase<string>) {
     let tgEn = new DebeziumServerFormBase<string>({
       label: en.name,

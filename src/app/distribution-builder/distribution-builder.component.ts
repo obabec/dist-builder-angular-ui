@@ -63,6 +63,10 @@ export class DistributionBuilderComponent implements OnInit {
     this.document = document;
   }
 
+  /**
+   * Initialization method. It calls http service to retrieve metadata. Once response arrives, metadata are parsed
+   * and angular is instructed to re-render.
+   */
   ngOnInit(): void {
     this.serverConfig = new DebeziumServerFormBase<any>();
     this._form = new FormGroup<any>({});
@@ -75,11 +79,13 @@ export class DistributionBuilderComponent implements OnInit {
     }).catch(() => {
       console.log("Error occurred during the initialization of the distribution-builder component!")
     });
-
-    //this.dependencyList = this.serverConfig.children[4];
-    console.log("Initialising builder UI complete.")
   }
 
+  /**
+   * Finds specific form group in passed group.
+   * @param name name of group
+   * @param group parent/location group
+   */
   getFormGroup(name: string, group: FormGroup): FormGroup {
     let tempGroup = group.get(name);
     if (tempGroup === null) {
@@ -88,6 +94,11 @@ export class DistributionBuilderComponent implements OnInit {
     return tempGroup as FormGroup;
   }
 
+  /**
+   * Method disables all other FormGroups than currently selected one.
+   * @param group FormGroup
+   * @param groupItem specific FormGroup metadata
+   */
   disableOtherImplementations(group: FormGroup, groupItem: DebeziumServerFormBase<any>) {
     if (groupItem.prnt != undefined) {
       for (let option of groupItem.prnt.options) {
@@ -107,6 +118,11 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
+  /**
+   * Disable all implementations of interface node.
+   * @param parentGroup
+   * @param parentInterface
+   */
   disableAllOptionInGroup(parentGroup: FormGroup, parentInterface: DebeziumServerFormBase<any>) {
     for (let option of parentInterface.options) {
       let groupEl = document.getElementById(this.getUniqueId(option));
@@ -118,6 +134,11 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
+  /**
+   * Disables group if group is not explicitly enabled
+   * @param object group metadata object
+   * @param group FormGroup
+   */
   disableGroupIfNotExplicit(object: DebeziumServerFormBase<any>, group: FormGroup) {
     let grp = document.getElementById(this.getUniqueId(object));
     if (grp != undefined) {
@@ -192,6 +213,12 @@ export class DistributionBuilderComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
+  /**
+   * Hides or unhides specific FormGroup. FormGroup is bosh hidden by css and disabled so it won't be used in final
+   * generate distribution request.
+   * @param group
+   * @param groupItem
+   */
   hideUnhide(group: FormGroup, groupItem: DebeziumServerFormBase<any>) {
     let groupEl = document.getElementById(this.getUniqueId(groupItem));
     this.disableOtherImplementations(group, groupItem);
@@ -214,6 +241,10 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
+  /**
+   * Generates unique identificator.
+   * @param object
+   */
   getUniqueId(object: DebeziumServerFormBase<any>): string {
     let id = "";
 
@@ -250,6 +281,12 @@ export class DistributionBuilderComponent implements OnInit {
     return targetGroup.enabled;
   }
 
+  /**
+   * On select change handler. Once option changes it's selected value it disables other options in the group.
+   * @param formGroup
+   * @param parent
+   * @param targetLabel
+   */
   onSelectChange(formGroup: FormGroup, parent: DebeziumServerFormBase<any>, targetLabel: any): void {
     let label = targetLabel.target.value;
     if (label != undefined) {
@@ -283,6 +320,10 @@ export class DistributionBuilderComponent implements OnInit {
     }
   }
 
+  /**
+   * Serializes the main FormGroup into the request JSON. Once json is prepared it appends both files
+   * as MultiPart file and sends it to the API.
+   */
   onSubmit() {
     let formData = new FormData()
     formData.append('distribution', JSON.stringify(this._form.value));
@@ -295,7 +336,7 @@ export class DistributionBuilderComponent implements OnInit {
     this.httpService.postForm(formData).then(response => {
       saveAs(response as Blob, 'distribution.zip')
     }).catch(err => {
-      console.log("Problema " + err.toString())
+      console.log("Error found during submit " + err.toString())
     })
   }
 

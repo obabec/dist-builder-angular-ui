@@ -34,6 +34,10 @@ import {MetadataObjectModel} from "../metadataModel/MetadataObjectModel";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 
+/*
+This class is just wrapper around HttpClient. It is bound to the API so the service provides
+only two endpoints getMetadata and generateDistribution.
+ */
 @Injectable({
   providedIn: 'root'
 })

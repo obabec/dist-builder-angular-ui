@@ -1,27 +1,27 @@
 # DistBuilderAngular
+This project is build on top of Angular 16. It uses the metadata generated
+from using [library](https://github.com/obabec/debezium-server-dist-builder) and [API](https://github.com/obabec/debezium-dist-builder-api).
+The UI is generated dynamically based on those metadata and everything except the
+key points like Source, Sink, etc. is dynamic.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.7.
+The UI offers user to put all the possible configuration for the Debezium Server
+which will be properly propagated into the correct file.
+
+Besides the distribution the UI offers also ability to provide keystore and trusture
+which will be placed to proper place and include that in custom Dockerfile.
+
+
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+The application provides 3 prepared configurations:
+* stage - API runs on 'http://127.0.0.1:7200'
+* prod - Empty, should be filled for production deployment together with TLS configuration 
+* argo - Expects that API is running in pod with service 'http://api-dist-builder:7200'
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Run tests
+* Start the API on port 7200
+* Start the UI on port 4200
+* `npx playwright test`
