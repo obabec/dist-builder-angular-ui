@@ -75,4 +75,15 @@ export class DebeziumServerFormBase<T> {
     this.prnt = options.prnt || null;
     this.dependencyList = options.dependencyList || null;
   }
+
+  public getTreeLevel() {
+    let level = 0;
+    let c = this.prnt;
+    while (c != null) {
+      level++;
+      c = c.prnt;
+    }
+    return level;
+  }
+
 }
